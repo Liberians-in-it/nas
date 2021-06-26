@@ -1,0 +1,109 @@
+version: "3"
+services:
+  workspace:
+    build:
+      context: ./docker/workspace
+      args:
+        - USERID=${USERID}
+        - GROUPID=${GROUPID}
+        - USER_NAME=${USER_NAME}
+        - GROUP_NAME=${GROUP_NAME}
+    tty: true
+    volumes:
+      - ./projects:/projects
+    networks:
+      - webnetwork
+    hostname: workspace
+
+  redisdb:
+     build:
+        context: ./docker/redis
+     volumes:
+        - ./docker/redis/data:/data
+     networks:
+      - webnetwork
+     hostname: redisdb
+      
+  nginx:
+     build:
+       context: ./docker/nginx
+       args:
+        - USERID=${USERID}
+        - GROUPID=${GROUPID}
+        - USER_NAME=${USER_NAME}
+        - GROUP_NAME=${GROUP_NAME}
+     restart: always
+     ports:
+       - 80:80
+       - 443:443
+     volumes:
+        - ./projects:/projects
+        - ./docker/nginx/sites:/etc/nginx/conf.d
+     depends_on:
+        - phpfpm
+        - redisdb
+        - db
+     networks:
+        webnetwork:
+            aliases:
+                - moodle.test
+                - api.test
+     hostname: nginx
+              
+  db:
+    build:
+      context: ./docker/db
+    restart: always
+    environment:
+       MYSQL_ROOT_PASSWORD: dbpassword
+    networks:
+      - webnetwork
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+    hostname: mariadb
+
+  phpfpm:
+    build:
+      context: ./docker/phpfpm
+      args:
+        - USERID=${USERID}
+        - GROUPID=${GROUPID}
+        - USER_NAME=${USER_NAME}
+        - GROUP_NAME=${GROUP_NAME}
+    volumes:
+      - ./projects:/projects
+      - ./.key/:/home/${USER_NAME}/.ssh
+    networks:
+      - webnetwork
+    hostname: phpfpm
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+       MONGO_INITDB_ROOT_USERNAME: root
+       MONGO_INITDB_ROOT_PASSWORD: dbpassword
+    volumes:
+      - ./docker/mongo/data:/data/db
+    networks:
+      - webnetwork
+    hostname: mongodb
+
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - webnetwork
+    hostname: mailhog
+  nodejs:
+    build: 
+      context: ./docker/nodejs
+    volumes:
+      - ./projects:/projects
+    hostname: nodejs
+
+networks:
+  webnetwork:
+    driver: bridge
