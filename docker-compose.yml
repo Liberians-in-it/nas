@@ -43,6 +43,7 @@ services:
         - phpfpm
         - redisdb
         - db
+        - nodejs
      networks:
         webnetwork:
             aliases:
@@ -100,6 +101,8 @@ services:
   nodejs:
     build: 
       context: ./docker/nodejs
+    networks:
+      - webnetwork
     volumes:
       - ./projects:/projects
     hostname: nodejs
