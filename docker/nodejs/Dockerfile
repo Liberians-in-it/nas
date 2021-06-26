@@ -1,7 +1,8 @@
 FROM node:lts
 
-WORKDIR /project
+WORKDIR /projects
 
 USER node
 
-CMD ["tail", "-f /dev/null"]
+ENTRYPOINT ["tail"]
+CMD ["-f","/dev/null"]
