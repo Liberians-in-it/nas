@@ -1,4 +1,5 @@
 docker/db/data
 docker/mongo/data
+docker/redis/data
 .key
 .env
