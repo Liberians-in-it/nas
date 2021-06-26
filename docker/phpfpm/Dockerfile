@@ -16,7 +16,7 @@ RUN apt-get update && apt-get -y install curl zip git nodejs npm gnupg sendmail
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt-get update && apt-get install -y  yarn libxml2-dev zlib1g-dev libzip-dev
-RUN docker-php-ext-install pdo_mysql mysqli soap zip intl xmlrpc opcache
+RUN docker-php-ext-install pdo_mysql mysqli soap zip intl opcache
 
 RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
@@ -26,8 +26,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd
 
-RUN pecl install redis-5.0.2 \
-    && pecl install mongodb-1.6.0 \
+RUN pecl install redis-5.3.4 \
+    && pecl install mongodb-1.9.0 \
     && docker-php-ext-enable redis mongodb
 
 RUN echo 'memory_limit = 512M' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini
