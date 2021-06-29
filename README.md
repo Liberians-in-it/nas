@@ -28,3 +28,19 @@ Source code are in the directory **projects**
 |--------------|-------------|----------------------------------|
 | api (backend)| nas_backend | Contains the laravel (php) code  |
 | UI (frontend API) | nas_frontend | APA and desktop application|
+
+
+# Developing
+## Backend (API)
+Laravel is use for the backend. You need to know PHP
+The test domain for the backend is `nas.test` . Register this in your `hosts` file
+
+##
+Quasar is use for the frontend.
+The frontend test domain is `nasfrontend.test`
+
+You need to start quasar dev server
+ - ssh into the nodejs container: `docker-compose exec nodje bash`
+ - cd into the frontend project folder: `cd nas_frontend`
+ - install node modules: `yarn install`
+ - run quasar dev server start command: `npx quasar dev`
