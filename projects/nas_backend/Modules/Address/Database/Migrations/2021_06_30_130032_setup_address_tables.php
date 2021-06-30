@@ -20,12 +20,12 @@ class SetupAddressTables extends Migration
      */
     public function up()
     {
-        $this->createStreetTable();
-        $this->createSuburbTable();
-        $this->createCityTable();
-        $this->creatPostcodeTable();
-        $this->createCountyTable();
         $this->createCountryTable();
+        $this->createCountyTable();
+        $this->createCityTable();
+        $this->createSuburbTable();
+        $this->creatPostcodeTable();
+        $this->createStreetTable();
         $this->createAddressTable();
         $this->createAddressableTable();
     }
@@ -60,8 +60,13 @@ class SetupAddressTables extends Migration
             $table->bigIncrements('id');
             $table->string('name', 255);
             $table->string('type', 255);
+
+            $table->foreignIdFor(Suburb::class)->constrained()->onDelete('cascade');
+
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['name', 'suburb_id']);
         });
     }
 
@@ -72,8 +77,13 @@ class SetupAddressTables extends Migration
         Schema::create('suburbs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 255);
+
+            $table->foreignIdFor(City::class)->constrained()->onDelete('cascade');
+
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['name', 'city_id']);
         });
     }
 
@@ -83,8 +93,13 @@ class SetupAddressTables extends Migration
         Schema::create('cities', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 255);
+
+            $table->foreignIdFor(County::class)->constrained()->onDelete('cascade');
+
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['name', 'county_id']);
         });
     }
 
@@ -94,8 +109,13 @@ class SetupAddressTables extends Migration
         Schema::create('postcodes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('code');
+
+            $table->foreignIdFor(County::class)->constrained()->onDelete('cascade');
+
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['code', 'county_id']);
         });
     }
 
@@ -105,6 +125,9 @@ class SetupAddressTables extends Migration
         Schema::create('counties', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 255);
+
+            $table->foreignIdFor(Country::class)->constrained()->onDelete('cascade');
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -115,7 +138,7 @@ class SetupAddressTables extends Migration
     {
         Schema::create('countries', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 255);
+            $table->string('name', 255)->unique();
             $table->timestamps();
             $table->softDeletes();
         });
