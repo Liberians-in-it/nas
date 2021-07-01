@@ -24,6 +24,16 @@ class Country extends Model
         return $this->hasMany(County::class);
     }
 
+    public function divisions(): HasMany
+    {
+        return $this->hasMany(Division::class);
+    }
+
+    public function divisionTypes(): HasMany
+    {
+        return $this->hasMany(DivisionType::class);
+    }
+
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);
