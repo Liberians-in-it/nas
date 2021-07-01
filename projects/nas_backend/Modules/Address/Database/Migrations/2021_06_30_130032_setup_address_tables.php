@@ -4,12 +4,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Modules\Address\Entities\Address;
-use Modules\Address\Entities\City;
 use Modules\Address\Entities\Country;
-use Modules\Address\Entities\County;
-use Modules\Address\Entities\Postcode;
+use Modules\Address\Entities\Division;
 use Modules\Address\Entities\Street;
-use Modules\Address\Entities\Suburb;
+use Modules\Address\Entities\DivisionType;
 
 class SetupAddressTables extends Migration
 {
@@ -21,10 +19,8 @@ class SetupAddressTables extends Migration
     public function up()
     {
         $this->createCountryTable();
-        $this->createCountyTable();
-        $this->createCityTable();
-        $this->createSuburbTable();
-        $this->creatPostcodeTable();
+        $this->createDivisionTypeTable();
+        $this->createDivisionTable();
         $this->createStreetTable();
         $this->createAddressTable();
         $this->createAddressableTable();
@@ -40,10 +36,8 @@ class SetupAddressTables extends Migration
         $tables = [
             'addresses',
             'streets',
-            'suburbs',
-            'cities',
-            'postcodes',
-            'counties',
+            'divisions',
+            'division_types',
             'countries',
             'addressables'
         ];
@@ -51,86 +45,6 @@ class SetupAddressTables extends Migration
         foreach ($tables as $table) {
             Schema::dropIfExists($table);
         }
-    }
-
-    // street table
-    private function createStreetTable()
-    {
-        Schema::create('streets', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name', 255);
-            $table->string('type', 255);
-
-            $table->foreignIdFor(Suburb::class)->constrained()->onDelete('cascade');
-
-            $table->timestamps();
-            $table->softDeletes();
-
-            $table->unique(['name', 'suburb_id']);
-        });
-    }
-
-
-    // subburbs
-    private function createSuburbTable()
-    {
-        Schema::create('suburbs', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name', 255);
-
-            $table->foreignIdFor(City::class)->constrained()->onDelete('cascade');
-
-            $table->timestamps();
-            $table->softDeletes();
-
-            $table->unique(['name', 'city_id']);
-        });
-    }
-
-    // cities
-    private function createCityTable()
-    {
-        Schema::create('cities', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name', 255);
-
-            $table->foreignIdFor(County::class)->constrained()->onDelete('cascade');
-
-            $table->timestamps();
-            $table->softDeletes();
-
-            $table->unique(['name', 'county_id']);
-        });
-    }
-
-    // postcode
-    private function creatPostcodeTable()
-    {
-        Schema::create('postcodes', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('code');
-
-            $table->foreignIdFor(County::class)->constrained()->onDelete('cascade');
-
-            $table->timestamps();
-            $table->softDeletes();
-
-            $table->unique(['code', 'county_id']);
-        });
-    }
-
-    // counties
-    private function createCountyTable()
-    {
-        Schema::create('counties', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name', 255);
-
-            $table->foreignIdFor(Country::class)->constrained()->onDelete('cascade');
-
-            $table->timestamps();
-            $table->softDeletes();
-        });
     }
 
     // countries
@@ -144,19 +58,68 @@ class SetupAddressTables extends Migration
         });
     }
 
+    // division types
+    private function createDivisionTypeTable()
+    {
+        Schema::create('division_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->integer('level');
+
+            $table->foreignIdFor(Country::class)->constrained()->onDelete('cascade');
+
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->unique(['name', 'level', 'country_id']);
+        });
+    }
+
+    // devisions
+    private function createDivisionTable()
+    {
+        Schema::create('divisions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 255);
+
+            $table->foreignIdFor(Country::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(DivisionType::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Division::class)
+                ->nullable()
+                ->constrained()->onDelete('cascade');
+
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+
+    // street table
+    private function createStreetTable()
+    {
+        Schema::create('streets', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name', 255);
+            $table->string('type', 255);
+
+            $table->foreignIdFor(Division::class)->constrained()->onDelete('cascade');
+
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->unique(['name', 'division_id']);
+        });
+    }
+
     // addresses
     private function createAddressTable()
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('number', 255);
+            $table->integer('postcode')->nullable();
 
             $table->foreignIdFor(Street::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Suburb::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(City::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Postcode::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(County::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Country::class)->constrained()->onDelete('cascade');
 
             $table->decimal('latitude')->nullable();
             $table->decimal('longitude')->nullable();
@@ -166,10 +129,8 @@ class SetupAddressTables extends Migration
 
             $table->unique([
                 'street_id',
-                'suburb_id',
-                'city_id',
-                'county_id',
-                'country_id'
+                'number',
+                'postcode'
             ], 'uq_address');
         });
     }
