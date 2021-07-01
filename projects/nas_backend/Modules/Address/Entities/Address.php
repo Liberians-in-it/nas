@@ -10,6 +10,10 @@ class Address extends Model
 {
     use HasFactory;
 
+    protected $with = [
+        'street'
+    ];
+
     protected $fillable = [
         'number'
     ];
@@ -24,28 +28,22 @@ class Address extends Model
         return $this->belongsTo(Street::class);
     }
 
-    public function suburb(): BelongsTo
+    public function toAddressString()
     {
-        return $this->belongsTo(Suburb::class);
+        $str = "{$this->number} {$this->street->name} \n\r";
+        return $this->visit($str, $this->street);
     }
 
-    public function city(): BelongsTo
+    protected function visit(string $str, $object): string
     {
-        return $this->belongsTo(City::class);
-    }
+        if ($object->parent || $object->division) {
+            $name = $object->parent? $object->parent->name : $object->division->name;
+            $str .= "{$name} \n\r";
+            $str = $this->visit($str, $object->parent? $object->parent : $object->division);
+        } else {
+            $str .= "{$this->postcode} {$object->name} \n\r";
+        }
 
-    public function postcode(): BelongsTo
-    {
-        return  $this->belongsTo(Postcode::class);
-    }
-
-    public function county(): BelongsTo
-    {
-        return $this->belongsTo(County::class);
-    }
-
-    public function country(): BelongsTo
-    {
-        return $this->belongsTo(Country::class);
+        return $str;
     }
 }
