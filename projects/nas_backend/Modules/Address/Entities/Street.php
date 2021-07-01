@@ -11,6 +11,10 @@ class Street extends Model
 {
     use HasFactory;
 
+    protected $with = [
+        'division'
+    ];
+
     protected $fillable = [
         'name'
     ];
@@ -20,13 +24,9 @@ class Street extends Model
         return \Modules\Address\Database\factories\StreetFactory::new();
     }
 
-    public function suburb(): BelongsTo
+    public function division(): BelongsTo
     {
-        return $this->belongsTo(Suburb::class);
+        return $this->belongsTo(Division::class);
     }
 
-    public function addresses(): HasMany
-    {
-        return $this->hasMany(Address::class);
-    }
 }
