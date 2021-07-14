@@ -19,7 +19,6 @@ class AddressDatabaseSeeder extends Seeder
 
         $this->call(CountryTableSeeder::class);
         $this->call(DivisionTypeTableSeeder::class);
-
-
+        $this->call(DivisionTableSeeder::class);
     }
 }
