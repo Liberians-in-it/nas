@@ -4,3 +4,4 @@ docker/redis/data
 .key
 .env
 projects/dev_tools/adminer/index.php
+projects/adminer/index.php
