@@ -25,7 +25,7 @@ class Division extends Model
         return \Modules\Address\Database\factories\DivisionFactory::new();
     }
 
-    public function DivisionType(): BelongsTo
+    public function divisionType(): BelongsTo
     {
         return $this->belongsTo(DivisionType::class);
     }
@@ -38,6 +38,11 @@ class Division extends Model
     public function parent(): BelongsTo
     {
        return $this->belongsTo(self::class, 'division_id');
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
     }
 
     public function children(): HasMany
