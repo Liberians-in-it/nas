@@ -5,6 +5,7 @@ namespace Modules\Address\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DivisionType extends Model
@@ -26,5 +27,10 @@ class DivisionType extends Model
     public function divisions(): HasMany
     {
         return $this->hasMany(Division::class);
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
     }
 }

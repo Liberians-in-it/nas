@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Address\Entities\Country;
 
-class AddressDatabaseSeeder extends Seeder
+class CountryTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,9 +17,10 @@ class AddressDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call(CountryTableSeeder::class);
-        $this->call(DivisionTypeTableSeeder::class);
-
-
+        if (Country::count() <= 0) {
+            Country::factory()
+                ->count(1)
+                ->create();
+        }
     }
 }
