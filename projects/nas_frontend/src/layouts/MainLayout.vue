@@ -23,12 +23,10 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      class="bg-grey-1"
     >
       <q-list>
         <q-item-label
           header
-          class="text-grey-8"
         >
           Essential Links
         </q-item-label>
@@ -96,6 +94,9 @@ const linksList = [
 ]
 
 import { defineComponent, ref } from 'vue'
+import { LocalStorage } from 'quasar'
+import { LoginInfoType } from '../models/types'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -106,6 +107,21 @@ export default defineComponent({
 
   setup () {
     const leftDrawerOpen = ref(false)
+
+    LocalStorage.clear()
+    const loginInfo = LocalStorage.getItem('nas_login')
+    const router = useRouter()
+
+    if (loginInfo && (loginInfo as LoginInfoType).apiToken) {
+      void router.replace({
+        name: 'dashboard'
+      })
+    } else {
+      console.log('take us to the login page')
+      void router.replace({
+        name: 'login'
+      })
+    }
 
     return {
       essentialLinks: linksList,

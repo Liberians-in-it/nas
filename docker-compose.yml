@@ -34,8 +34,8 @@ services:
         - GROUP_NAME=${GROUP_NAME}
      restart: always
      ports:
-       - 80:80
-       - 443:443
+       - 8080:80
+       - 4343:443
      volumes:
         - ./projects:/projects
         - ./docker/nginx/sites:/etc/nginx/conf.d
@@ -103,6 +103,8 @@ services:
       context: ./docker/nodejs
     networks:
       - webnetwork
+    ports:
+      - 8081:8080
     volumes:
       - ./projects:/projects
     hostname: nodejs

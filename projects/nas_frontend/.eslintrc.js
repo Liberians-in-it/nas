@@ -80,7 +80,6 @@ module.exports = {
     'multiline-ternary': 'off',
 
     'import/first': 'off',
-    'import/named': 'error',
     'import/namespace': 'error',
     'import/default': 'error',
     'import/export': 'error',

@@ -30,7 +30,7 @@ module.exports = configure(function (ctx) {
     // https://v2.quasar.dev/quasar-cli/boot-files
     boot: [
       'i18n',
-      'axios'
+      'axios',
     ],
 
     // https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -42,7 +42,7 @@ module.exports = configure(function (ctx) {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v5',
-      'fontawesome-v5',
+      // 'fontawesome-v5',
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -74,7 +74,7 @@ module.exports = configure(function (ctx) {
 
       // https://v2.quasar.dev/quasar-cli/handling-webpack
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      chainWebpack (/* chain */) {
+      chainWebpack(/* chain */) {
         //
       }
     },
@@ -93,7 +93,7 @@ module.exports = configure(function (ctx) {
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
 
-      // For special cases outside of where the auto-import stategy can have an impact
+      // For special cases outside of where the auto-import strategy can have an impact
       // (like functional components as one of the examples),
       // you can manually specify Quasar components/directives to be available everywhere:
       //
@@ -101,12 +101,14 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'LocalStorage',
+      ]
     },
 
-    animations: 'all', // --- includes all animations
+    // animations: 'all', // --- includes all animations
     // https://v2.quasar.dev/options/animations
-    // animations: [],
+    animations: [],
 
     // https://v2.quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
@@ -121,7 +123,7 @@ module.exports = configure(function (ctx) {
       maxAge: 1000 * 60 * 60 * 24 * 30,
       // Tell browser when a file from the server should expire from cache (in ms)
 
-      chainWebpackWebserver (/* chain */) {
+      chainWebpackWebserver(/* chain */) {
         //
       },
 
@@ -138,14 +140,14 @@ module.exports = configure(function (ctx) {
 
       // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
       // if using workbox in InjectManifest mode
-      chainWebpackCustomSW (/* chain */) {
+      chainWebpackCustomSW(/* chain */) {
         //
       },
 
       manifest: {
-        name: 'National Address System',
-        short_name: 'National Address System',
-        description: 'National Address System',
+        name: 'National Address System Application',
+        short_name: 'National Address System Application',
+        description: 'National Address System Application',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -210,17 +212,17 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'nas'
+        appId: 'nas_frontend'
       },
 
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      chainWebpack (/* chain */) {
+      chainWebpack(/* chain */) {
         // do something with the Electron main process Webpack cfg
         // extendWebpackMain also available besides this chainWebpackMain
       },
 
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      chainWebpackPreload (/* chain */) {
+      chainWebpackPreload(/* chain */) {
         // do something with the Electron main process Webpack cfg
         // extendWebpackPreload also available besides this chainWebpackPreload
       }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Address\Entities\Country;
+use Modules\Address\Transformers\Country\CountryCollection;
 
 class CountryController extends Controller
 {
@@ -15,7 +16,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        return Country::paginate();
+        return new CountryCollection(Country::paginate());
     }
 
     /**
