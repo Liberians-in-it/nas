@@ -10,8 +10,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { configure } = require('quasar/wrappers')
 
+require('dotenv').config()
+
 module.exports = configure(function (ctx) {
   return {
+    htmlVariables: {
+      api_host: process.env.NODE_ENV === 'production' ? '{! api_host !}' : process.env.API_HOST,
+      api_token: process.env.NODE_ENV === 'production' ? '{! api_token !}' : process.env.API_TOKEN
+    },
     // https://v2.quasar.dev/quasar-cli/supporting-ts
     supportTS: {
       tsCheckerConfig: {
@@ -104,9 +110,8 @@ module.exports = configure(function (ctx) {
       plugins: []
     },
 
-    // animations: 'all', // --- includes all animations
+    animations: 'all', // --- includes all animations
     // https://v2.quasar.dev/options/animations
-    animations: [],
 
     // https://v2.quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
