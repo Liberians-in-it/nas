@@ -6,18 +6,31 @@
       :todos="todos"
       :meta="meta"
     ></example-component>
+    <pre>
+      {{ result }}
+    </pre>
   </q-page>
 </template>
 
 <script lang="ts">
 import { Todo, Meta } from 'components/models'
 import ExampleComponent from 'components/CompositionComponent.vue'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, reactive } from 'vue'
+import { client, UserType } from '../model/users'
 
 export default defineComponent({
   name: 'PageIndex',
   components: { ExampleComponent },
   setup () {
+    const result = reactive<{user: UserType | null }>({ user: null })
+
+    client.getMe()
+      .then((user: UserType) => {
+        result.user = user
+      }).catch(() => {
+        console.log("nothing here")
+      })
+
     const todos = ref<Todo[]>([
       {
         id: 1,
@@ -43,7 +56,11 @@ export default defineComponent({
     const meta = ref<Meta>({
       totalCount: 1200
     })
-    return { todos, meta }
+    return {
+      todos,
+      meta,
+      result
+    }
   }
 })
 </script>
