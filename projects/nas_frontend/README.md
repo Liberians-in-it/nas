@@ -1,6 +1,6 @@
-# National Address System Application (nas_frontend)
+# National Address System (nas_frontend)
 
-National Address System Application
+National Address System
 
 ## Install the dependencies
 ```bash

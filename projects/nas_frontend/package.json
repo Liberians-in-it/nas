@@ -1,8 +1,8 @@
 {
   "name": "nas_frontend",
   "version": "0.0.1",
-  "description": "National Address System Application",
-  "productName": "National Address System Application",
+  "description": "National Address System",
+  "productName": "National Address System",
   "author": "Jibao Mansaray <jibaomansaray@gmail.com>",
   "private": true,
   "scripts": {
